@@ -1,0 +1,185 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: agentlens-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-agentlens}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-agentlens_secure_password}
+      POSTGRES_DB: ${POSTGRES_DB:-agentlens}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "${POSTGRES_PORT:-55432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-agentlens} -d ${POSTGRES_DB:-agentlens}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      - agentlens-net
+
+  redis:
+    image: redis:7-alpine
+    container_name: agentlens-redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    ports:
+      - "${REDIS_PORT:-56379}:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      - agentlens-net
+
+  migration:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.api
+    container_name: agentlens-migration
+    command: ["agentlens", "migrate", "upgrade"]
+    environment:
+      AGENTLENS_ENVIRONMENT: ${AGENTLENS_ENVIRONMENT:-production}
+      AGENTLENS_DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-agentlens}:${POSTGRES_PASSWORD:-agentlens_secure_password}@postgres:5432/${POSTGRES_DB:-agentlens}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - agentlens-net
+
+  api:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.api
+    container_name: agentlens-api
+    restart: unless-stopped
+    command: ["agentlens", "server", "--host", "0.0.0.0", "--port", "8000"]
+    ports:
+      - "${API_PORT:-8000}:8000"
+    environment:
+      AGENTLENS_ENVIRONMENT: ${AGENTLENS_ENVIRONMENT:-production}
+      AGENTLENS_DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-agentlens}:${POSTGRES_PASSWORD:-agentlens_secure_password}@postgres:5432/${POSTGRES_DB:-agentlens}
+      AGENTLENS_REDIS_URL: redis://redis:6379/0
+      AGENTLENS_PROJECT_ID: ${AGENTLENS_PROJECT_ID:-prod-project}
+      AGENTLENS_PROJECT_API_KEY: ${AGENTLENS_PROJECT_API_KEY:-prod_super_secret_api_key_12345}
+      AGENTLENS_API_KEY_ID: ${AGENTLENS_API_KEY_ID:-prod-api-key}
+      AGENTLENS_LOG_LEVEL: ${AGENTLENS_LOG_LEVEL:-INFO}
+      AGENTLENS_LOG_FORMAT: ${AGENTLENS_LOG_FORMAT:-json}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health/ready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      migration:
+        condition: service_completed_successfully
+    networks:
+      - agentlens-net
+
+  worker:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.worker
+    container_name: agentlens-worker-evaluation
+    restart: unless-stopped
+    command: ["agentlens", "worker"]
+    environment:
+      AGENTLENS_ENVIRONMENT: ${AGENTLENS_ENVIRONMENT:-production}
+      AGENTLENS_DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-agentlens}:${POSTGRES_PASSWORD:-agentlens_secure_password}@postgres:5432/${POSTGRES_DB:-agentlens}
+      AGENTLENS_REDIS_URL: redis://redis:6379/0
+      AGENTLENS_PROJECT_ID: ${AGENTLENS_PROJECT_ID:-prod-project}
+      AGENTLENS_LOG_LEVEL: ${AGENTLENS_LOG_LEVEL:-INFO}
+      AGENTLENS_LOG_FORMAT: ${AGENTLENS_LOG_FORMAT:-json}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      migration:
+        condition: service_completed_successfully
+    networks:
+      - agentlens-net
+
+  replay-worker:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.worker
+    container_name: agentlens-worker-replay
+    restart: unless-stopped
+    command: ["agentlens", "replay-worker"]
+    environment:
+      AGENTLENS_ENVIRONMENT: ${AGENTLENS_ENVIRONMENT:-production}
+      AGENTLENS_DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-agentlens}:${POSTGRES_PASSWORD:-agentlens_secure_password}@postgres:5432/${POSTGRES_DB:-agentlens}
+      AGENTLENS_REDIS_URL: redis://redis:6379/0
+      AGENTLENS_PROJECT_ID: ${AGENTLENS_PROJECT_ID:-prod-project}
+      AGENTLENS_LOG_LEVEL: ${AGENTLENS_LOG_LEVEL:-INFO}
+      AGENTLENS_LOG_FORMAT: ${AGENTLENS_LOG_FORMAT:-json}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      migration:
+        condition: service_completed_successfully
+    networks:
+      - agentlens-net
+
+  regression-worker:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.worker
+    container_name: agentlens-worker-regression
+    restart: unless-stopped
+    command: ["agentlens", "regression-worker"]
+    environment:
+      AGENTLENS_ENVIRONMENT: ${AGENTLENS_ENVIRONMENT:-production}
+      AGENTLENS_DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-agentlens}:${POSTGRES_PASSWORD:-agentlens_secure_password}@postgres:5432/${POSTGRES_DB:-agentlens}
+      AGENTLENS_REDIS_URL: redis://redis:6379/0
+      AGENTLENS_PROJECT_ID: ${AGENTLENS_PROJECT_ID:-prod-project}
+      AGENTLENS_LOG_LEVEL: ${AGENTLENS_LOG_LEVEL:-INFO}
+      AGENTLENS_LOG_FORMAT: ${AGENTLENS_LOG_FORMAT:-json}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      migration:
+        condition: service_completed_successfully
+    networks:
+      - agentlens-net
+
+  web:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.web
+    container_name: agentlens-dashboard
+    restart: unless-stopped
+    ports:
+      - "${DASHBOARD_PORT:-3000}:3000"
+    environment:
+      NODE_ENV: production
+      AGENTLENS_GATEWAY_URL: http://api:8000
+      AGENTLENS_PROJECT_ID: ${AGENTLENS_PROJECT_ID:-prod-project}
+      AGENTLENS_PROJECT_API_KEY: ${AGENTLENS_PROJECT_API_KEY:-prod_super_secret_api_key_12345}
+    depends_on:
+      - api
+    networks:
+      - agentlens-net
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  agentlens-net:
+    driver: bridge

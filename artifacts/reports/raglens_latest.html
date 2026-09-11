@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lighthouse for RAG — Audit: rl_key_3a502ef2917b4f32</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: #f8fafc;
+      color: #0f172a;
+      line-height: 1.5;
+      padding: 24px 16px;
+    }
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .gauge-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 6px;
+    }
+    .gauge-circle-container {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .gauge-inner-text {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .gauge-number {
+      font-size: 20px;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1;
+    }
+    .gauge-grade {
+      font-size: 10px;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+    th {
+      padding: 8px 12px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #64748b;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .golden-box {
+      background: #0f172a;
+      color: #ffffff;
+      border-radius: 8px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    a.btn-dashboard {
+      display: inline-block;
+      background: #3b82f6;
+      color: #ffffff;
+      text-decoration: none;
+      padding: 9px 16px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 13px;
+    }
+    a.btn-dashboard:hover {
+      background: #2563eb;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px;">
+      <div>
+        <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #64748b;">
+          Google Lighthouse for RAG &bull; Automated AI Performance Audit
+        </span>
+        <h1 style="font-size: 26px; font-weight: 800; color: #0f172a; letter-spacing: -0.02em; margin-top: 4px;">
+          RAG Performance Audit
+        </h1>
+        <p style="font-size: 13px; color: #64748b; margin-top: 2px;">
+          Evaluated via CLI &bull; Domain: <strong>Enterprise Billing & Legal Terms v2.4</strong>
+        </p>
+      </div>
+
+      <div style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 999px; background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; font-size: 12px; font-weight: 700;">
+        <span style="width: 8px; height: 8px; border-radius: 50%; background: #10b981;"></span>
+        PostgreSQL Persisted Run
+      </div>
+    </div>
+
+    <!-- Golden Key Box -->
+    <div class="golden-box">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+        <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8;">
+          Request API Key (Indexed in PostgreSQL)
+        </span>
+        <span style="font-size: 12px; color: #94a3b8;">Trace ID: <code>trace_a22cbb218b88</code></span>
+      </div>
+      <div style="font-family: monospace; font-size: 20px; font-weight: 800; color: #38bdf8;">
+        rl_key_3a502ef2917b4f32
+      </div>
+      <p style="font-size: 13px; color: #cbd5e1; margin: 0;">
+        This exact audit report is stored in PostgreSQL. Paste this key into the RagLens Web Dashboard to explore live graphs.
+      </p>
+      <div>
+        <a href="http://localhost:3000/raglens?key=rl_key_3a502ef2917b4f32" target="_blank" class="btn-dashboard">
+          Open Live Report in Web Dashboard &rarr;
+        </a>
+      </div>
+    </div>
+
+    <!-- 4 Lighthouse Score Gauges Card -->
+    <div class="card">
+      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 20px;">
+        <!-- Overall Gauge -->
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <div class="gauge-circle-container">
+            
+        <svg width="88" height="88" viewBox="0 0 88 88" style="transform: rotate(-90deg);">
+          <circle cx="44" cy="44" r="40" fill="transparent" stroke="#e2e8f0" stroke-width="8" />
+          <circle cx="44" cy="44" r="40" fill="transparent" stroke="#10b981" stroke-width="8"
+                  stroke-dasharray="251.3" stroke-dashoffset="22.6" stroke-linecap="round" />
+        </svg>
+        
+            <div class="gauge-inner-text">
+              <span style="font-size: 24px; font-weight: 800; color: #0f172a; line-height: 1;">91</span>
+              <span style="font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-top: 2px;">A</span>
+            </div>
+          </div>
+          <div>
+            <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 0.05em;">Overall RAG Grade</div>
+            <div style="font-size: 20px; font-weight: 800; color: #0f172a; margin-top: 2px;">Grade A (91/100)</div>
+            <div style="font-size: 12px; color: #64748b;">Weighted multi-pillar performance index</div>
+          </div>
+        </div>
+
+        <!-- 4 Pillars -->
+        <div style="display: flex; gap: 24px; flex-wrap: wrap;">
+          <!-- Latency -->
+          <div class="gauge-wrapper">
+            <div class="gauge-circle-container">
+              
+        <svg width="76" height="76" viewBox="0 0 76 76" style="transform: rotate(-90deg);">
+          <circle cx="38" cy="38" r="35" fill="transparent" stroke="#e2e8f0" stroke-width="6" />
+          <circle cx="38" cy="38" r="35" fill="transparent" stroke="#f59e0b" stroke-width="6"
+                  stroke-dasharray="219.9" stroke-dashoffset="44.0" stroke-linecap="round" />
+        </svg>
+        
+              <div class="gauge-inner-text">
+                <span class="gauge-number">80</span>
+                <span class="gauge-grade">B</span>
+              </div>
+            </div>
+            <span style="font-size: 12px; font-weight: 700; color: #0f172a;">Latency</span>
+          </div>
+
+          <!-- Grounding -->
+          <div class="gauge-wrapper">
+            <div class="gauge-circle-container">
+              
+        <svg width="76" height="76" viewBox="0 0 76 76" style="transform: rotate(-90deg);">
+          <circle cx="38" cy="38" r="35" fill="transparent" stroke="#e2e8f0" stroke-width="6" />
+          <circle cx="38" cy="38" r="35" fill="transparent" stroke="#10b981" stroke-width="6"
+                  stroke-dasharray="219.9" stroke-dashoffset="0.0" stroke-linecap="round" />
+        </svg>
+        
+              <div class="gauge-inner-text">
+                <span class="gauge-number">100</span>
+                <span class="gauge-grade">A+</span>
+              </div>
+            </div>
+            <span style="font-size: 12px; font-weight: 700; color: #0f172a;">Grounding</span>
+          </div>
+
+          <!-- Cost -->
+          <div class="gauge-wrapper">
+            <div class="gauge-circle-container">
+              
+        <svg width="76" height="76" viewBox="0 0 76 76" style="transform: rotate(-90deg);">
+          <circle cx="38" cy="38" r="35" fill="transparent" stroke="#e2e8f0" stroke-width="6" />
+          <circle cx="38" cy="38" r="35" fill="transparent" stroke="#10b981" stroke-width="6"
+                  stroke-dasharray="219.9" stroke-dashoffset="0.0" stroke-linecap="round" />
+        </svg>
+        
+              <div class="gauge-inner-text">
+                <span class="gauge-number">100</span>
+                <span class="gauge-grade">A+</span>
+              </div>
+            </div>
+            <span style="font-size: 12px; font-weight: 700; color: #0f172a;">Cost</span>
+          </div>
+
+          <!-- Vector Density -->
+          <div class="gauge-wrapper">
+            <div class="gauge-circle-container">
+              
+        <svg width="76" height="76" viewBox="0 0 76 76" style="transform: rotate(-90deg);">
+          <circle cx="38" cy="38" r="35" fill="transparent" stroke="#e2e8f0" stroke-width="6" />
+          <circle cx="38" cy="38" r="35" fill="transparent" stroke="#f59e0b" stroke-width="6"
+                  stroke-dasharray="219.9" stroke-dashoffset="33.0" stroke-linecap="round" />
+        </svg>
+        
+              <div class="gauge-inner-text">
+                <span class="gauge-number">85</span>
+                <span class="gauge-grade">B+</span>
+              </div>
+            </div>
+            <span style="font-size: 12px; font-weight: 700; color: #0f172a;">Vector Density</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Query Bar -->
+      <div style="margin-top: 16px;">
+        <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 0.05em; margin-bottom: 4px;">
+          Evaluated Question
+        </div>
+        <div style="font-size: 15px; font-weight: 600; color: #0f172a; padding: 10px 14px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px;">
+          "What is our enterprise refund policy for annual licenses?"
+        </div>
+      </div>
+    </div>
+
+    <!-- Opportunities Section -->
+    <div class="card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <div>
+          <h2 style="font-size: 17px; font-weight: 700; color: #0f172a; margin: 0;">Lighthouse Opportunities (Estimated Savings)</h2>
+          <p style="font-size: 13px; color: #64748b; margin-top: 2px;">Concrete engineering optimizations to accelerate latency and cut recurring spend.</p>
+        </div>
+      </div>
+      
+        <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin-bottom: 12px; background: #ffffff;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px;">
+            <h4 style="font-size: 15px; font-weight: 700; color: #0f172a; margin: 0;">Enable Server-Sent Events (SSE) Token Streaming</h4>
+            <span style="display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 800; background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe;">
+              TRIM 1,107 MS TTFT
+            </span>
+          </div>
+          <p style="font-size: 13px; color: #475569; margin: 6px 0 10px; line-height: 1.5;">Currently the client buffers all 1384ms of LLM generation. Enabling token streaming yields first-token display in ~689ms.</p>
+          <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 4px;">Recommended Implementation:</div>
+          <pre style="background: #0f172a; color: #f8fafc; padding: 10px 12px; border-radius: 6px; font-size: 12px; font-family: monospace; overflow-x: auto; margin: 0;"># Switch client to async streaming iterator:
+async for chunk in client.chat.completions.create(..., stream=True):
+    yield chunk.choices[0].delta.content</pre>
+        </div>
+        
+        <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin-bottom: 12px; background: #ffffff;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px;">
+            <h4 style="font-size: 15px; font-weight: 700; color: #0f172a; margin: 0;">Optimize Chunk Split Size from 1,200 to 500 Tokens</h4>
+            <span style="display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 800; background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe;">
+              SAVE $420/MO
+            </span>
+          </div>
+          <p style="font-size: 13px; color: #475569; margin: 6px 0 10px; line-height: 1.5;">Found 1 oversized chunks (>900 tokens). Large chunks dilute vector cosine density and consume excess context window. Splitting at 500 tokens with 50-token overlap preserves semantic focus.</p>
+          <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 4px;">Recommended Implementation:</div>
+          <pre style="background: #0f172a; color: #f8fafc; padding: 10px 12px; border-radius: 6px; font-size: 12px; font-family: monospace; overflow-x: auto; margin: 0;">from langchain.text_splitter import RecursiveCharacterTextSplitter
+splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)</pre>
+        </div>
+        
+        <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin-bottom: 12px; background: #ffffff;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px;">
+            <h4 style="font-size: 15px; font-weight: 700; color: #0f172a; margin: 0;">Enable System Prompt Caching on Claude / OpenAI</h4>
+            <span style="display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 800; background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe;">
+              CUT PROMPT COST 35%
+            </span>
+          </div>
+          <p style="font-size: 13px; color: #475569; margin: 6px 0 10px; line-height: 1.5;">Static instructions and legal guidelines account for 820 tokens per query. Enabling ephemeral prompt caching cuts input pricing for matching prefixes by up to 90%.</p>
+          <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 4px;">Recommended Implementation:</div>
+          <pre style="background: #0f172a; color: #f8fafc; padding: 10px 12px; border-radius: 6px; font-size: 12px; font-family: monospace; overflow-x: auto; margin: 0;"># Anthropic prompt caching header:
+messages = [{'role': 'system', 'content': [{'type': 'text', 'text': sys_prompt, 'cache_control': {'type': 'ephemeral'}}]}]</pre>
+        </div>
+        
+    </div>
+
+    <!-- Diagnostic Audits Checklist -->
+    <div class="card">
+      <h2 style="font-size: 17px; font-weight: 700; color: #0f172a; margin-bottom: 16px;">Diagnostic Audits Checklist</h2>
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Audit Item</th>
+              <th>Observed Metric</th>
+              <th>Target Threshold</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+        <tr style="border-bottom: 1px solid #f1f5f9;">
+          <td style="padding: 10px 12px; font-weight: 600; font-size: 13px; color: #0f172a;">
+            <span style="display: inline-block; font-size: 11px; font-weight: 700; color: #d97706; margin-right: 6px;">[ALERT]</span>
+            Time to First Token (TTFT)
+            <div style="font-size: 11px; font-weight: 400; color: #64748b; margin-top: 2px;">Measures how long the end-user waits before seeing the first word generated.</div>
+          </td>
+          <td style="padding: 10px 12px; font-size: 13px; font-weight: 600; color: #0f172a;">1796 ms</td>
+          <td style="padding: 10px 12px; font-size: 12px; color: #64748b;">< 400 ms</td>
+        </tr>
+        
+        <tr style="border-bottom: 1px solid #f1f5f9;">
+          <td style="padding: 10px 12px; font-weight: 600; font-size: 13px; color: #0f172a;">
+            <span style="display: inline-block; font-size: 11px; font-weight: 700; color: #16a34a; margin-right: 6px;">[PASS]</span>
+            Cross-Encoder Reranker Latency Overhead
+            <div style="font-size: 11px; font-weight: 400; color: #64748b; margin-top: 2px;">Reranking should not exceed 20% of total pipeline latency.</div>
+          </td>
+          <td style="padding: 10px 12px; font-size: 13px; font-weight: 600; color: #0f172a;">11.8% (212 ms)</td>
+          <td style="padding: 10px 12px; font-size: 12px; color: #64748b;">< 20.0%</td>
+        </tr>
+        
+        <tr style="border-bottom: 1px solid #f1f5f9;">
+          <td style="padding: 10px 12px; font-weight: 600; font-size: 13px; color: #0f172a;">
+            <span style="display: inline-block; font-size: 11px; font-weight: 700; color: #16a34a; margin-right: 6px;">[PASS]</span>
+            Context Citation Grounding
+            <div style="font-size: 11px; font-weight: 400; color: #64748b; margin-top: 2px;">Cosine relevance between user question and top retrieved documentation.</div>
+          </td>
+          <td style="padding: 10px 12px; font-size: 13px; font-weight: 600; color: #0f172a;">0.84 avg similarity</td>
+          <td style="padding: 10px 12px; font-size: 12px; color: #64748b;">>= 0.75</td>
+        </tr>
+        
+        <tr style="border-bottom: 1px solid #f1f5f9;">
+          <td style="padding: 10px 12px; font-weight: 600; font-size: 13px; color: #0f172a;">
+            <span style="display: inline-block; font-size: 11px; font-weight: 700; color: #d97706; margin-right: 6px;">[ALERT]</span>
+            Hallucination Risk Probability
+            <div style="font-size: 11px; font-weight: 400; color: #64748b; margin-top: 2px;">Likelihood that LLM will invent unsupported claims due to context dilution.</div>
+          </td>
+          <td style="padding: 10px 12px; font-size: 13px; font-weight: 600; color: #0f172a;">16.0% risk</td>
+          <td style="padding: 10px 12px; font-size: 12px; color: #64748b;">< 12.0%</td>
+        </tr>
+        
+        <tr style="border-bottom: 1px solid #f1f5f9;">
+          <td style="padding: 10px 12px; font-weight: 600; font-size: 13px; color: #0f172a;">
+            <span style="display: inline-block; font-size: 11px; font-weight: 700; color: #d97706; margin-right: 6px;">[ALERT]</span>
+            Chunk Size Hygiene (0 to 800 tokens)
+            <div style="font-size: 11px; font-weight: 400; color: #64748b; margin-top: 2px;">Oversized chunks cause attention dispersion in dense vector models.</div>
+          </td>
+          <td style="padding: 10px 12px; font-size: 13px; font-weight: 600; color: #0f172a;">1 oversized chunks (>900 tokens)</td>
+          <td style="padding: 10px 12px; font-size: 12px; color: #64748b;">0 oversized chunks</td>
+        </tr>
+        
+        <tr style="border-bottom: 1px solid #f1f5f9;">
+          <td style="padding: 10px 12px; font-weight: 600; font-size: 13px; color: #0f172a;">
+            <span style="display: inline-block; font-size: 11px; font-weight: 700; color: #16a34a; margin-right: 6px;">[PASS]</span>
+            Irrelevant Chunk Rejection
+            <div style="font-size: 11px; font-weight: 400; color: #64748b; margin-top: 2px;">Checks if low-similarity fragments are actively pruned before prompt assembly.</div>
+          </td>
+          <td style="padding: 10px 12px; font-size: 13px; font-weight: 600; color: #0f172a;">0 noise chunks (< 0.55 similarity)</td>
+          <td style="padding: 10px 12px; font-size: 12px; color: #64748b;">0 noise chunks</td>
+        </tr>
+        
+        <tr style="border-bottom: 1px solid #f1f5f9;">
+          <td style="padding: 10px 12px; font-weight: 600; font-size: 13px; color: #0f172a;">
+            <span style="display: inline-block; font-size: 11px; font-weight: 700; color: #16a34a; margin-right: 6px;">[PASS]</span>
+            Input Context-to-Completion Efficiency
+            <div style="font-size: 11px; font-weight: 400; color: #64748b; margin-top: 2px;">Ensures prompt budget is well-balanced between context and room for generation.</div>
+          </td>
+          <td style="padding: 10px 12px; font-size: 13px; font-weight: 600; color: #0f172a;">90.3% context ratio</td>
+          <td style="padding: 10px 12px; font-size: 12px; color: #64748b;">50% - 85%</td>
+        </tr>
+        
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Pipeline Waterfall -->
+    <div class="card">
+      <h2 style="font-size: 17px; font-weight: 700; color: #0f172a; margin-bottom: 16px;">Pipeline Span Latency Breakdown</h2>
+      
+        <div style="margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; margin-bottom: 4px;">
+            <span>01. Embedding <span style="font-weight: 400; color: #64748b;">(text-embedding-3-small)</span></span>
+            <span>71 ms (4.0%)</span>
+          </div>
+          <div style="height: 8px; width: 100%; background: #f1f5f9; border-radius: 4px; overflow: hidden;">
+            <div style="height: 100%; width: 4.0%; background: #3b82f6; border-radius: 4px;"></div>
+          </div>
+        </div>
+        
+        <div style="margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; margin-bottom: 4px;">
+            <span>02. Vector Search <span style="font-weight: 400; color: #64748b;">(Pinecone Serverless)</span></span>
+            <span>111 ms (6.2%)</span>
+          </div>
+          <div style="height: 8px; width: 100%; background: #f1f5f9; border-radius: 4px; overflow: hidden;">
+            <div style="height: 100%; width: 6.2%; background: #3b82f6; border-radius: 4px;"></div>
+          </div>
+        </div>
+        
+        <div style="margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; margin-bottom: 4px;">
+            <span>03. Reranker <span style="font-weight: 400; color: #64748b;">(Cohere Rerank v3)</span></span>
+            <span>212 ms (11.8%)</span>
+          </div>
+          <div style="height: 8px; width: 100%; background: #f1f5f9; border-radius: 4px; overflow: hidden;">
+            <div style="height: 100%; width: 11.8%; background: #3b82f6; border-radius: 4px;"></div>
+          </div>
+        </div>
+        
+        <div style="margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; margin-bottom: 4px;">
+            <span>04. Context Assembly <span style="font-weight: 400; color: #64748b;">(In-Memory Template)</span></span>
+            <span>18 ms (1.0%)</span>
+          </div>
+          <div style="height: 8px; width: 100%; background: #f1f5f9; border-radius: 4px; overflow: hidden;">
+            <div style="height: 100%; width: 2%; background: #3b82f6; border-radius: 4px;"></div>
+          </div>
+        </div>
+        
+        <div style="margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; margin-bottom: 4px;">
+            <span>05. LLM Generation <span style="font-weight: 400; color: #64748b;">(Claude 3.5 Sonnet (Anthropic))</span></span>
+            <span>1384 ms (77.1%)</span>
+          </div>
+          <div style="height: 8px; width: 100%; background: #f1f5f9; border-radius: 4px; overflow: hidden;">
+            <div style="height: 100%; width: 77.1%; background: #ef4444; border-radius: 4px;"></div>
+          </div>
+        </div>
+        
+    </div>
+
+    <!-- Chunks Retrieved -->
+    <div class="card">
+      <h2 style="font-size: 17px; font-weight: 700; color: #0f172a; margin-bottom: 16px;">Retrieved Document Chunks & Grounding</h2>
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Chunk ID</th>
+              <th>Source Document</th>
+              <th>Tokens</th>
+              <th>Similarity</th>
+              <th>Grounding</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+        <tr style="border-bottom: 1px solid #f1f5f9;">
+          <td style="padding: 8px 12px; font-family: monospace; font-size: 12px; color: #64748b;">chk_df6b0d</td>
+          <td style="padding: 8px 12px; font-weight: 600; font-size: 13px; color: #0f172a;">enterprise_billing_and_legal_terms_v2.4_p1.pdf</td>
+          <td style="padding: 8px 12px; font-size: 13px; color: #64748b;">460 tokens</td>
+          <td style="padding: 8px 12px; font-weight: 700; font-size: 13px; color: #0f172a;">0.95</td>
+          <td style="padding: 8px 12px;">
+            <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; background: #ecfdf5; color: #065f46;">
+              Strong Grounding
+            </span>
+          </td>
+        </tr>
+        
+        <tr style="border-bottom: 1px solid #f1f5f9;">
+          <td style="padding: 8px 12px; font-family: monospace; font-size: 12px; color: #64748b;">chk_c249f4</td>
+          <td style="padding: 8px 12px; font-weight: 600; font-size: 13px; color: #0f172a;">enterprise_billing_and_legal_terms_v2.4_p2.pdf</td>
+          <td style="padding: 8px 12px; font-size: 13px; color: #64748b;">520 tokens</td>
+          <td style="padding: 8px 12px; font-weight: 700; font-size: 13px; color: #0f172a;">0.89</td>
+          <td style="padding: 8px 12px;">
+            <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; background: #ecfdf5; color: #065f46;">
+              Strong Grounding
+            </span>
+          </td>
+        </tr>
+        
+        <tr style="border-bottom: 1px solid #f1f5f9;">
+          <td style="padding: 8px 12px; font-family: monospace; font-size: 12px; color: #64748b;">chk_5609a1</td>
+          <td style="padding: 8px 12px; font-weight: 600; font-size: 13px; color: #0f172a;">enterprise_sla_terms.pdf</td>
+          <td style="padding: 8px 12px; font-size: 13px; color: #64748b;">980 tokens</td>
+          <td style="padding: 8px 12px; font-weight: 700; font-size: 13px; color: #0f172a;">0.84</td>
+          <td style="padding: 8px 12px;">
+            <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; background: #ecfdf5; color: #065f46;">
+              Strong Grounding
+            </span>
+          </td>
+        </tr>
+        
+        <tr style="border-bottom: 1px solid #f1f5f9;">
+          <td style="padding: 8px 12px; font-family: monospace; font-size: 12px; color: #64748b;">chk_19bb7e</td>
+          <td style="padding: 8px 12px; font-weight: 600; font-size: 13px; color: #0f172a;">appendix_definitions.md</td>
+          <td style="padding: 8px 12px; font-size: 13px; color: #64748b;">310 tokens</td>
+          <td style="padding: 8px 12px; font-weight: 700; font-size: 13px; color: #0f172a;">0.78</td>
+          <td style="padding: 8px 12px;">
+            <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; background: #ecfdf5; color: #065f46;">
+              Strong Grounding
+            </span>
+          </td>
+        </tr>
+        
+        <tr style="border-bottom: 1px solid #f1f5f9;">
+          <td style="padding: 8px 12px; font-family: monospace; font-size: 12px; color: #64748b;">chk_b70fb7</td>
+          <td style="padding: 8px 12px; font-weight: 600; font-size: 13px; color: #0f172a;">historical_notes.txt</td>
+          <td style="padding: 8px 12px; font-size: 13px; color: #64748b;">120 tokens</td>
+          <td style="padding: 8px 12px; font-weight: 700; font-size: 13px; color: #0f172a;">0.72</td>
+          <td style="padding: 8px 12px;">
+            <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; background: #ecfdf5; color: #065f46;">
+              Strong Grounding
+            </span>
+          </td>
+        </tr>
+        
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div style="text-align: center; font-size: 12px; color: #94a3b8; padding: 12px 0;">
+      RagLens Automated AI Performance Audit &bull; PostgreSQL Telemetry Store &bull; Trace ID: trace_a22cbb218b88
+    </div>
+  </div>
+</body>
+</html>

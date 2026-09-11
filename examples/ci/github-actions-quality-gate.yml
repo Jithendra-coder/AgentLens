@@ -1,0 +1,27 @@
+name: AgentLens quality gate
+
+on:
+  pull_request:
+
+jobs:
+  quality-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m pip install -e .
+      # The surrounding pipeline owns replay creation and M10 report creation.
+      - name: Build candidate and create M10 report
+        run: echo "Create the controlled replays and M10 report here"
+      - name: Evaluate AgentLens quality gate
+        env:
+          AGENTLENS_API_URL: ${{ vars.AGENTLENS_API_URL }}
+          AGENTLENS_API_KEY: ${{ secrets.AGENTLENS_API_KEY }}
+          REGRESSION_RUN_ID: ${{ vars.AGENTLENS_REGRESSION_RUN_ID }}
+          QUALITY_GATE_POLICY_ID: ${{ vars.AGENTLENS_QUALITY_GATE_POLICY_ID }}
+        run: >-
+          agentlens gate evaluate
+          --regression-run "$REGRESSION_RUN_ID"
+          --policy "$QUALITY_GATE_POLICY_ID"

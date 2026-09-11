@@ -1,0 +1,71 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agentlens"
+version = "0.1.0"
+description = "Provider-independent observability and evaluation foundation for AI applications"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.scripts]
+agentlens = "agentlens.cli:main"
+
+[project.optional-dependencies]
+dev = [
+    "alembic>=1.13,<2",
+    "fastapi>=0.110,<1",
+    "httpx>=0.27,<1",
+    "mypy>=1.8",
+    "psycopg[binary]>=3.1,<4",
+    "pytest>=8.0",
+    "redis>=5,<7",
+    "ruff>=0.6",
+    "sqlalchemy>=2.0,<3",
+    "uvicorn>=0.30,<1",
+]
+server = [
+    "alembic>=1.13,<2",
+    "fastapi>=0.110,<1",
+    "psycopg[binary]>=3.1,<4",
+    "redis>=5,<7",
+    "sqlalchemy>=2.0,<3",
+    "uvicorn>=0.30,<1",
+]
+http = [
+    "httpx>=0.27,<1",
+]
+storage = [
+    "alembic>=1.13,<2",
+    "psycopg[binary]>=3.1,<4",
+    "sqlalchemy>=2.0,<3",
+]
+runtime = [
+    "alembic>=1.13,<2",
+    "fastapi>=0.110,<1",
+    "psycopg[binary]>=3.1,<4",
+    "redis>=5,<7",
+    "sqlalchemy>=2.0,<3",
+    "uvicorn>=0.30,<1",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.mypy]
+python_version = "3.11"
+files = ["src"]
+strict = true

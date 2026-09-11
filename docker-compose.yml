@@ -1,0 +1,42 @@
+version: "3.8"
+
+services:
+  # AgentLens Telemetry & Evaluation Backend
+  agentlens-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: agentlens-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - AGENTLENS_MASTER_KEY=dev-key-12345
+      - AGENTLENS_DEFAULT_PROJECT=proj-default
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - agentlens-data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/v1/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+  # AgentLens Noir Next.js Observability Dashboard
+  agentlens-web:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: agentlens-web
+    ports:
+      - "3000:3000"
+    environment:
+      - AGENTLENS_API_BASE_URL=http://agentlens-backend:8000
+      - AGENTLENS_PROJECT_API_KEY=dev-key-12345
+    depends_on:
+      - agentlens-backend
+    restart: unless-stopped
+
+volumes:
+  agentlens-data:
+    driver: local

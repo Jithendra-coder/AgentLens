@@ -1,0 +1,24 @@
+# Production Dockerfile for AgentLens FastAPI Telemetry Ingestion Engine
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install build essentials for C-extensions (e.g. DuckDB)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy pyproject.toml and source code
+COPY pyproject.toml README.md ./
+COPY src/ ./src/
+
+# Install dependencies and package
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -e .
+
+# Expose FastAPI backend port
+EXPOSE 8000
+
+# Run FastAPI app via Uvicorn
+CMD ["python", "-m", "uvicorn", "--factory", "agentlens.api.app:create_app", "--host", "0.0.0.0", "--port", "8000"]

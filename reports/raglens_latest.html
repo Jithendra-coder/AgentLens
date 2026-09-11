@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>RagLens Audit Report - rl_key_c301d94d9e454e90</title>
+  <style>
+    :root {
+      --bg: #0b0f17;
+      --card-bg: #121824;
+      --border: #1e293b;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background: var(--bg); color: var(--text); padding: 40px 20px; }
+    .container { max-width: 960px; margin: 0 auto; }
+    .header { border-bottom: 1px solid var(--border); padding-bottom: 24px; margin-bottom: 32px; }
+    .brand { font-size: 13px; font-weight: 700; color: var(--accent); letter-spacing: 1.5px; text-transform: uppercase; }
+    .title { font-size: 28px; font-weight: 800; margin-top: 8px; }
+    .meta-bar { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 16px; font-size: 13px; color: var(--text-muted); }
+    .meta-item strong { color: var(--text); }
+    .score-banner {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      margin-bottom: 32px;
+    }
+    .circle-score {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      border: 4px solid #22c55e;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(34, 197, 94, 0.08);
+      flex-shrink: 0;
+    }
+    .circle-score .grade { font-size: 38px; font-weight: 900; color: #22c55e; line-height: 1; }
+    .circle-score .score { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+    .banner-text h2 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+    .banner-text p { color: var(--text-muted); font-size: 14px; line-height: 1.5; }
+    .pillars-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px; }
+    .pillar-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+    .pillar-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .pillar-title { font-size: 14px; font-weight: 600; color: var(--text-muted); }
+    .pillar-badge { font-size: 12px; font-weight: 700; padding: 3px 8px; border-radius: 6px; border: 1px solid; }
+    .pillar-metric { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+    .pillar-sub { font-size: 12px; color: var(--text-muted); }
+    .section-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; }
+    .opps-grid { display: grid; gap: 16px; margin-bottom: 32px; }
+    .opp-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+    .opp-badge { display: inline-block; font-size: 11px; font-weight: 700; color: #facc15; background: rgba(250, 204, 21, 0.1); border: 1px solid rgba(250, 204, 21, 0.2); padding: 3px 8px; border-radius: 4px; margin-bottom: 8px; }
+    .opp-title { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+    .opp-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 10px; }
+    .opp-impact { font-size: 12px; color: #38bdf8; }
+    .spans-list { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 32px; }
+    .span-row { display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .span-row:last-child { border-bottom: none; }
+    .span-name { width: 280px; font-size: 14px; font-weight: 500; }
+    .span-bar-wrapper { flex: 1; height: 10px; background: rgba(255,255,255,0.06); border-radius: 5px; margin: 0 16px; overflow: hidden; }
+    .span-bar { height: 100%; background: var(--accent); border-radius: 5px; }
+    .span-lat { width: 140px; text-align: right; font-size: 13px; font-family: monospace; color: var(--text-muted); }
+    .footer { text-align: center; color: var(--text-muted); font-size: 12px; margin-top: 40px; border-top: 1px solid var(--border); padding-top: 20px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="brand">AgentLens &bull; Lighthouse for RAG</div>
+      <div class="title">RAG Application Audit Report</div>
+      <div class="meta-bar">
+        <div class="meta-item">API Key: <strong>rl_key_c301d94d9e454e90</strong></div>
+        <div class="meta-item">Trace ID: <strong>trace_b29b4e711ee0</strong></div>
+        <div class="meta-item">Domain: <strong>Enterprise Billing & Legal Terms v2.4</strong></div>
+        <div class="meta-item">Query: <strong>"Test vector search"</strong></div>
+      </div>
+    </div>
+
+    <div class="score-banner">
+      <div class="circle-score">
+        <div class="grade">A</div>
+        <div class="score">89 / 100</div>
+      </div>
+      <div class="banner-text">
+        <h2>Overall Performance Grade: A</h2>
+        <p>This audit evaluated end-to-end latency, vector retrieval grounding, cost economy, and chunk balance. Top opportunities below highlight estimated ROI and latency gains.</p>
+      </div>
+    </div>
+
+    <div class="section-title">Audit Pillars</div>
+    <div class="pillars-grid">
+      
+        <div class="pillar-card">
+          <div class="pillar-top">
+            <span class="pillar-title">Latency</span>
+            <span class="pillar-badge" style="color: #3b82f6; border-color: #3b82f640; background: #3b82f615;">B (80)</span>
+          </div>
+          <div class="pillar-metric">1233 ms total</div>
+          <div class="pillar-sub">TTFT ~1233 ms</div>
+        </div>
+        
+        <div class="pillar-card">
+          <div class="pillar-top">
+            <span class="pillar-title">Grounding</span>
+            <span class="pillar-badge" style="color: #22c55e; border-color: #22c55e40; background: #22c55e15;">A+ (100)</span>
+          </div>
+          <div class="pillar-metric">0.84 avg similarity</div>
+          <div class="pillar-sub">16.4% hallucination risk</div>
+        </div>
+        
+        <div class="pillar-card">
+          <div class="pillar-top">
+            <span class="pillar-title">Cost</span>
+            <span class="pillar-badge" style="color: #22c55e; border-color: #22c55e40; background: #22c55e15;">A (90)</span>
+          </div>
+          <div class="pillar-metric">$0.0134 / req</div>
+          <div class="pillar-sub">3,842 tokens</div>
+        </div>
+        
+        <div class="pillar-card">
+          <div class="pillar-top">
+            <span class="pillar-title">Vector Density</span>
+            <span class="pillar-badge" style="color: #3b82f6; border-color: #3b82f640; background: #3b82f615;">B+ (85)</span>
+          </div>
+          <div class="pillar-metric">5 chunks retrieved</div>
+          <div class="pillar-sub">1 oversized chunks</div>
+        </div>
+        
+    </div>
+
+    <div class="section-title">Top Actionable Opportunities</div>
+    <div class="opps-grid">
+      
+        <div class="opp-card">
+          <div class="opp-badge">TRIM 645 MS TTFT</div>
+          <div class="opp-title">Enable Server-Sent Events (SSE) Token Streaming</div>
+          <div class="opp-desc">Stream tokens progressively to the client so users receive immediate first-token feedback while the rest generates.</div>
+          <div class="opp-impact"><strong>Impact:</strong> HIGH &nbsp;|&nbsp; <strong>Effort:</strong> LOW (15 mins)</div>
+        </div>
+        
+        <div class="opp-card">
+          <div class="opp-badge">SAVE $420/MO</div>
+          <div class="opp-title">Optimize Chunk Split Size from 1,200 to 500 Tokens</div>
+          <div class="opp-desc">1 oversized chunks detected (>800 tokens). Splitting passages into tighter semantic chunks reduces prompt bloat and prevents context dilution.</div>
+          <div class="opp-impact"><strong>Impact:</strong> HIGH &nbsp;|&nbsp; <strong>Effort:</strong> LOW (1-line change)</div>
+        </div>
+        
+        <div class="opp-card">
+          <div class="opp-badge">CUT PROMPT COST 35%</div>
+          <div class="opp-title">Enable System Prompt Caching on Claude / OpenAI</div>
+          <div class="opp-desc">Cache system instructions and static knowledge domain schemas across repeat user queries.</div>
+          <div class="opp-impact"><strong>Impact:</strong> MEDIUM &nbsp;|&nbsp; <strong>Effort:</strong> LOW (3 lines of config)</div>
+        </div>
+        
+    </div>
+
+    <div class="section-title">Pipeline Span Latency Breakdown</div>
+    <div class="spans-list">
+      
+        <div class="span-row">
+          <div class="span-name">01. Embedding <span style="color:#64748b;font-size:12px">(text-embedding-3-small)</span></div>
+          <div class="span-bar-wrapper">
+            <div class="span-bar" style="width: 7.1%;"></div>
+          </div>
+          <div class="span-lat">87 ms (7.1%)</div>
+        </div>
+        
+        <div class="span-row">
+          <div class="span-name">02. Vector Search <span style="color:#64748b;font-size:12px">(Pinecone Serverless)</span></div>
+          <div class="span-bar-wrapper">
+            <div class="span-bar" style="width: 9.0%;"></div>
+          </div>
+          <div class="span-lat">111 ms (9.0%)</div>
+        </div>
+        
+        <div class="span-row">
+          <div class="span-name">03. Reranker <span style="color:#64748b;font-size:12px">(Cohere Rerank v3)</span></div>
+          <div class="span-bar-wrapper">
+            <div class="span-bar" style="width: 17.1%;"></div>
+          </div>
+          <div class="span-lat">211 ms (17.1%)</div>
+        </div>
+        
+        <div class="span-row">
+          <div class="span-name">04. Context Assembly <span style="color:#64748b;font-size:12px">(In-Memory Template)</span></div>
+          <div class="span-bar-wrapper">
+            <div class="span-bar" style="width: 6%;"></div>
+          </div>
+          <div class="span-lat">18 ms (1.5%)</div>
+        </div>
+        
+        <div class="span-row">
+          <div class="span-name">05. LLM Generation <span style="color:#64748b;font-size:12px">(GPT-4o (OpenAI))</span></div>
+          <div class="span-bar-wrapper">
+            <div class="span-bar" style="width: 65.4%;"></div>
+          </div>
+          <div class="span-lat">806 ms (65.4%)</div>
+        </div>
+        
+    </div>
+
+    <div class="footer">
+      Generated automatically by AgentLens Standalone CLI &bull; Provider-Independent AI Observability
+    </div>
+  </div>
+</body>
+</html>

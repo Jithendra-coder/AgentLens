@@ -165,7 +165,7 @@ milestone.
 ## M12 - Performance, Reliability & Security
 
 **Status:** PASS WITH LIMITATIONS — bounded local evidence is complete; see
-`docs/M12_COMPLETION_REPORT.md`.
+`docs/SECURITY_HARDENING.md` and `docs/LIMITATIONS.md` for the recorded scope.
 
 - **Objective:** Measure and harden production behavior.
 - **Major deliverables:** p50/p95/p99 latency, throughput, error rate, CPU,
@@ -178,7 +178,7 @@ milestone.
 
 - **Status:** PASS — implemented and verified in the current workspace.
 - **Objective:** Establish production deployment architecture, containerization, unified configuration, lifecycle management, health probes, structured logging, and advisory-locked migrations.
-- **Major deliverables:** Multi-stage Dockerfiles (`Dockerfile.api`, `Dockerfile.worker`, `Dockerfile.web`), `docker-compose.prod.yml`, Twelve-Factor `AgentLensSettings` with fail-fast validation, `LifecycleCoordinator` with graceful shutdown, `/health/live`, `/health/ready`, and `/health/startup` probes, advisory-locked PostgreSQL migration runner (`migration_runner.py`), JSON structured logging with request/correlation ID tracking, and operations/deployment documentation (`DEPLOYMENT.md`, `OPERATIONS.md`, `CONFIGURATION.md`, `M13_TO_M30_MASTER_PLAN.md`).
+- **Major deliverables:** Multi-stage Dockerfiles, `deployment/docker-compose.prod.yml`, fail-fast settings, lifecycle management, health probes, an advisory-locked migration runner, structured logging with request/correlation IDs, and operations/deployment documentation (`DEPLOYMENT.md`, `OPERATIONS.md`, `CONFIGURATION.md`).
 - **Key exclusions:** Multi-tenant RBAC (M15), enterprise OAuth/OIDC (M16), external telemetry exporters (M14).
 - **Exit criteria:** Container definitions, configuration validation, lifecycle shutdown, advisory lock migration safety, health probes, and documentation verified.
 

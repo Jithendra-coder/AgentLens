@@ -16,12 +16,13 @@ New controls:
 - Dashboard runtime worker status comes from the durable `worker_heartbeats`
   table, not a fabricated process-local value.
 
-Run `py -3.11 scripts/security_scan_m12.py` for the recorded source scan,
-dependency inventory, and advisory-tool availability. The final `npm audit`
-result is clean; `pip-audit` is unavailable and remains explicitly recorded.
-The workspace has no Git metadata, so history scanning is unavailable. An
-unavailable tool or a reported advisory is not silently treated as a clean
-result. Never place real credentials in
+Run `py -3.11 scripts/security_scan_m12.py` for the recorded M12 source scan,
+dependency inventory, and advisory-tool availability. Its `npm audit` result
+describes the lockfile at that time, not the current dashboard dependencies.
+CI runs `npm audit --omit=dev` against the current lockfile. `pip-audit` was
+unavailable for the M12 snapshot. The M12 workspace had no Git metadata, so
+history scanning was unavailable. An unavailable tool or a reported advisory
+is not silently treated as a clean result. Never place real credentials in
 fixtures, logs, artifacts, URLs, or browser code.
 
 M12 does not claim penetration-test completion, formal certification, encrypted

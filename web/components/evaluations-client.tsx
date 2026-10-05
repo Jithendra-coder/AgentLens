@@ -185,7 +185,7 @@ export default function EvaluationsClient() {
                 <div style={{ width: `${report.answer_relevance}%`, height: "100%", background: "#0284c7" }} />
               </div>
               <p className="subtle" style={{ fontSize: "0.72rem", margin: 0, color: "#64748b" }}>
-                Answers directly resolve the user's explicit question without conversational fluff.
+                Answers directly resolve the user&apos;s explicit question without conversational fluff.
               </p>
             </div>
 

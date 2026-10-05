@@ -361,7 +361,7 @@ def test_controlled_quality_improvement_and_latency_regression(m10_runtime) -> N
             cases = await client.get(
                 f"/v1/regression-runs/{run_id}/cases?limit=100", headers=headers
             )
-            assert report.json()["status"] == "completed"
+            assert report.json()["status"] == "completed", report.text
             by_metric = {item["metric_id"]: item for item in metrics.json()["items"]}
             assert by_metric["replay.execution_success_rate"]["classification"] == "improved"
             assert by_metric["trace.duration_ms.p95"]["classification"] == "regressed"

@@ -453,7 +453,7 @@ export default function StudioClient() {
                         {sec.summary}
                       </p>
                       <div style={{ fontSize: "0.72rem", color: "#64748b" }}>
-                        Suggested: <span style={{ color: "#0284c7", fontWeight: 600, textDecoration: "underline" }}>"{sec.suggestedQuery}"</span>
+                        Suggested: <span style={{ color: "#0284c7", fontWeight: 600, textDecoration: "underline" }}>&quot;{sec.suggestedQuery}&quot;</span>
                       </div>
                     </div>
                   );
@@ -613,7 +613,7 @@ export default function StudioClient() {
                               <span className="subtle" style={{ fontFamily: "monospace", color: "#0284c7", fontWeight: 600 }}>Match: {(c.score * 100).toFixed(1)}%</span>
                             </div>
                             <p className="subtle" style={{ margin: 0, fontStyle: "italic", fontSize: "0.76rem", color: "#475569" }}>
-                              "{c.excerpt}"
+                              &quot;{c.excerpt}&quot;
                             </p>
                           </div>
                         ))}

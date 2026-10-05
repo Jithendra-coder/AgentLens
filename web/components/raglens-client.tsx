@@ -340,7 +340,7 @@ export default function RagLensClient() {
                   >
                     <div style={{ overflow: "hidden", paddingRight: "0.5rem" }}>
                       <div style={{ fontSize: "0.78rem", fontWeight: 700, color: "#0f172a", whiteSpace: "nowrap", textOverflow: "ellipsis", overflow: "hidden" }}>
-                        "{item.query}"
+                        &quot;{item.query}&quot;
                       </div>
                       <div style={{ fontSize: "0.7rem", color: "#64748b", marginTop: "2px", fontFamily: "monospace" }}>
                         {item.api_key} &bull; {new Date(item.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -499,7 +499,7 @@ export default function RagLensClient() {
               </div>
             </div>
             <div style={{ fontSize: "0.95rem", fontWeight: 600, color: "#0f172a", padding: "0.75rem 1rem", backgroundColor: "#f8fafc", borderRadius: "6px", border: "1px solid #e2e8f0" }}>
-              "{loadedReport?.query}"
+              &quot;{loadedReport?.query}&quot;
             </div>
           </div>
 

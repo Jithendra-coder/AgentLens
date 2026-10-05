@@ -4,31 +4,17 @@ from __future__ import annotations
 
 import asyncio
 import os
-import subprocess
-import sys
-from uuid import UUID, uuid4
+from uuid import uuid4
 
 import httpx
 import pytest
 from sqlalchemy import delete, update
 
-from agentlens.api import InMemoryApiKeyAuthenticator, create_app
-from agentlens.quality_gates.repository import PostgresQualityGateRepository
-from agentlens.storage import DatabaseConfig, PostgresTraceRepository
+from agentlens.regression.runtime import RegressionRuntimeConfig, RegressionWorker
 from agentlens.storage.models import (
-    dataset_cases,
-    dataset_versions,
-    datasets,
     quality_gate_decisions,
     quality_gate_policies,
-    regression_case_comparisons,
-    regression_metric_comparisons,
-    regression_policies,
     regression_runs,
-    replay_attempts,
-    replay_case_executions,
-    replay_runs,
-    traces,
 )
 
 DATABASE_URL = os.environ.get("AGENTLENS_TEST_DATABASE_URL") or os.environ.get(
@@ -40,34 +26,89 @@ pytestmark = pytest.mark.skipif(
 )
 
 
-def test_quality_gate_api_and_policy_scenarios() -> None:
+def test_quality_gate_api_and_policy_scenarios(m10_runtime) -> None:
     assert DATABASE_URL and REDIS_URL
-    project_id = f"m11-{uuid4()}"
-    environment = os.environ.copy()
-    environment["AGENTLENS_DATABASE_URL"] = DATABASE_URL
-    environment["AGENTLENS_REDIS_URL"] = REDIS_URL
-    environment["AGENTLENS_PROJECT_ID"] = project_id
-    seeded = subprocess.run(
-        [sys.executable, "scripts/seed_m10_browser_fixture.py"],
-        check=True,
-        capture_output=True,
-        text=True,
-        env=environment,
+    (
+        project_id,
+        trace_repo,
+        _,
+        regression_repo,
+        regression_dispatcher,
+        evaluation_dispatcher,
+        eval_jobs,
+        eval_results,
+        app,
+        baseline_id,
+        candidate_id,
+    ) = m10_runtime
+    worker = RegressionWorker(
+        repository=regression_repo,
+        evaluation_job_repository=eval_jobs,
+        evaluation_result_repository=eval_results,
+        evaluation_dispatcher=evaluation_dispatcher,
+        dispatcher=regression_dispatcher,
+        config=RegressionRuntimeConfig(
+            redis_url=REDIS_URL,
+            queue_name=regression_dispatcher.config.queue_name,
+            worker_poll_timeout=0,
+            lease_seconds=2,
+            heartbeat_seconds=0.1,
+        ),
     )
-    run_id = UUID(seeded.stdout.strip().splitlines()[-1])
-    config = DatabaseConfig(DATABASE_URL)
-    trace_repo = PostgresTraceRepository(config)
-    gate_repo = PostgresQualityGateRepository(config, engine=trace_repo.engine)
-    auth = InMemoryApiKeyAuthenticator()
-    auth.register(api_key="m11-a", key_id="m11-a", project_id=project_id)
-    auth.register(api_key="m11-b", key_id="m11-b", project_id=f"other-{project_id}")
-    app = create_app(database=config, authenticator=auth)
+    run_id = None
 
     async def scenario() -> None:
+        nonlocal run_id
         async with httpx.AsyncClient(
             transport=httpx.ASGITransport(app=app), base_url="http://test"
         ) as client:
-            headers = {"Authorization": "Bearer m11-a"}
+            headers = {"Authorization": "Bearer m10-a"}
+            regression_policy = await client.post(
+                "/v1/regression-policies",
+                headers=headers,
+                json={
+                    "name": "quality-gate-fixture",
+                    "description": "Seed completed quality and latency comparisons.",
+                    "rules": [
+                        {
+                            "rule_id": "quality",
+                            "metric_id": "replay.execution_success_rate",
+                            "direction": "higher_is_better",
+                            "absolute_tolerance": 0.02,
+                            "minimum_samples": 1,
+                            "required": True,
+                            "severity": "critical",
+                        },
+                        {
+                            "rule_id": "latency",
+                            "metric_id": "trace.duration_ms.p95",
+                            "direction": "lower_is_better",
+                            "relative_tolerance": 0.1,
+                            "candidate_maximum": 1000,
+                            "minimum_samples": 1,
+                            "required": True,
+                            "severity": "warning",
+                        },
+                    ],
+                },
+            )
+            assert regression_policy.status_code == 201, regression_policy.text
+            regression = await client.post(
+                "/v1/regression-runs",
+                headers={**headers, "Idempotency-Key": f"m11-run-{uuid4()}"},
+                json={
+                    "baseline_replay_run_id": str(baseline_id),
+                    "candidate_replay_run_id": str(candidate_id),
+                    "policy_id": regression_policy.json()["policy_id"],
+                },
+            )
+            assert regression.status_code == 202, regression.text
+            run_id = regression.json()["regression_run_id"]
+            regression_dispatcher._client.delete(regression_dispatcher.config.queue_name)
+            assert worker.recover_once() == 1
+            assert worker.run_once() is True
+            report = await client.get(f"/v1/regression-runs/{run_id}", headers=headers)
+            assert report.json()["status"] == "completed", report.text
             policy_body = {
                 "name": "production-support-agent",
                 "description": "Blocking quality and latency release rules.",
@@ -196,7 +237,7 @@ def test_quality_gate_api_and_policy_scenarios() -> None:
             assert (
                 await client.get(
                     f"/v1/quality-gate-decisions/{failed['decision_id']}",
-                    headers={"Authorization": "Bearer m11-b"},
+                    headers={"Authorization": "Bearer m10-b"},
                 )
             ).status_code == 404
 
@@ -214,54 +255,3 @@ def test_quality_gate_api_and_policy_scenarios() -> None:
                     quality_gate_policies.c.project_id == project_id
                 )
             )
-            connection.execute(
-                delete(regression_case_comparisons).where(
-                    regression_case_comparisons.c.regression_run_id.in_(
-                        select_ids(connection, regression_runs, project_id)
-                    )
-                )
-            )
-            connection.execute(
-                delete(regression_metric_comparisons).where(
-                    regression_metric_comparisons.c.regression_run_id.in_(
-                        select_ids(connection, regression_runs, project_id)
-                    )
-                )
-            )
-            connection.execute(
-                delete(regression_runs).where(regression_runs.c.project_id == project_id)
-            )
-            connection.execute(
-                delete(regression_policies).where(regression_policies.c.project_id == project_id)
-            )
-            connection.execute(
-                delete(replay_attempts).where(
-                    replay_attempts.c.execution_id.in_(
-                        select_ids(connection, replay_case_executions, project_id, "execution_id")
-                    )
-                )
-            )
-            connection.execute(
-                delete(replay_case_executions).where(
-                    replay_case_executions.c.project_id == project_id
-                )
-            )
-            connection.execute(delete(replay_runs).where(replay_runs.c.project_id == project_id))
-            connection.execute(
-                delete(dataset_cases).where(dataset_cases.c.project_id == project_id)
-            )
-            connection.execute(
-                delete(dataset_versions).where(dataset_versions.c.project_id == project_id)
-            )
-            connection.execute(delete(datasets).where(datasets.c.project_id == project_id))
-            connection.execute(delete(traces).where(traces.c.project_id == project_id))
-        gate_repo.dispose()
-        trace_repo.dispose()
-
-
-def select_ids(connection, table, project_id: str, column: str = "regression_run_id"):
-    """Small test-only query helper kept local to avoid production abstractions."""
-
-    from sqlalchemy import select
-
-    return select(getattr(table.c, column)).where(table.c.project_id == project_id)

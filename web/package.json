@@ -13,7 +13,7 @@
     "e2e": "playwright test"
   },
   "dependencies": {
-    "next": "15.5.21",
+    "next": "15.5.27",
     "react": "18.3.1",
     "react-dom": "18.3.1"
   },
@@ -27,14 +27,14 @@
     "@types/react-dom": "18.3.5",
     "@vitejs/plugin-react": "^6.0.5",
     "eslint": "8.57.1",
-    "eslint-config-next": "15.5.21",
+    "eslint-config-next": "15.5.27",
     "jsdom": "25.0.1",
-    "puppeteer-core": "^24.43.1",
+    "playwright": "1.62.1",
     "typescript": "5.7.2",
-    "vitest": "4.1.10"
+    "vitest": "4.1.11"
   },
   "overrides": {
     "postcss": "8.5.26",
-    "sharp": "0.35.0"
+    "sharp": "0.35.4"
   }
 }

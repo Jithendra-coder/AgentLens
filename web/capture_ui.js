@@ -1,110 +1,63 @@
-const puppeteer = require('puppeteer-core');
-const fs = require('fs');
-const path = require('path');
+const { chromium } = require('playwright');
+const fs = require('node:fs');
+const path = require('node:path');
+const { pathToFileURL } = require('node:url');
 
 async function capture() {
-  const screenshotsDir = path.resolve('..', 'screenshots');
-  if (!fs.existsSync(screenshotsDir)) {
-    fs.mkdirSync(screenshotsDir, { recursive: true });
-  }
+  const screenshotsDir = path.resolve(__dirname, '..', 'screenshots');
+  fs.mkdirSync(screenshotsDir, { recursive: true });
 
-  console.log('Launching headless Chrome...');
-  const browser = await puppeteer.launch({
-    executablePath: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+  const browser = await chromium.launch({
+    executablePath: process.env.CHROME_PATH || 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
     headless: true,
     args: ['--no-sandbox', '--disable-setuid-sandbox', '--window-size=1440,1050'],
-    defaultViewport: { width: 1440, height: 1050, deviceScaleFactor: 1.5 },
   });
 
-  const page = await browser.newPage();
-
-  // 1. Audit Run with GPT-4o (rl_key_2828a6c8c1f2428c)
-  console.log('Capturing Audit with GPT-4o model...');
-  await page.goto('http://localhost:3000/raglens?key=rl_key_2828a6c8c1f2428c', {
-    waitUntil: 'domcontentloaded',
-    timeout: 15000,
-  });
-  await new Promise((r) => setTimeout(r, 2500));
-
-  await page.screenshot({
-    path: path.join(screenshotsDir, '01_lighthouse_audit_gpt4o.png'),
-    fullPage: true,
-  });
-  console.log('Saved: 01_lighthouse_audit_gpt4o.png');
-
-  // 2. Audit Run with Gemini 1.5 Pro (rl_key_10471fa03d0241e0)
-  console.log('Capturing Audit with Gemini 1.5 Pro model...');
-  await page.goto('http://localhost:3000/raglens?key=rl_key_10471fa03d0241e0', {
-    waitUntil: 'domcontentloaded',
-    timeout: 15000,
-  });
-  await new Promise((r) => setTimeout(r, 2500));
-
-  await page.screenshot({
-    path: path.join(screenshotsDir, '02_lighthouse_audit_gemini.png'),
-    fullPage: true,
-  });
-  console.log('Saved: 02_lighthouse_audit_gemini.png');
-
-  // 3. Expand Opportunity Code Blueprint
-  console.log('Capturing Opportunity Code Blueprint...');
   try {
-    const viewFixBtn = await page.evaluateHandle(() => {
-      const btns = Array.from(document.querySelectorAll('button'));
-      return btns.find((b) => b.textContent && b.textContent.includes('View Fix'));
+    const page = await browser.newPage({
+      viewport: { width: 1440, height: 1050 },
+      deviceScaleFactor: 1.5,
     });
-    if (viewFixBtn && viewFixBtn.asElement()) {
-      await viewFixBtn.asElement().click();
-      await new Promise((r) => setTimeout(r, 600));
+
+    const captures = [
+      [process.env.RAGLENS_GPT4O_KEY, '01_lighthouse_audit_gpt4o.png'],
+      [process.env.RAGLENS_GEMINI_KEY, '02_lighthouse_audit_gemini.png'],
+    ];
+    for (const [key, filename] of captures) {
+      if (!key) throw new Error(`Set the key used for ${filename} in the environment.`);
+      const url = `http://localhost:3000/raglens?key=${encodeURIComponent(key)}`;
+      await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 15000 });
+      await page.waitForTimeout(2500);
+      await page.screenshot({ path: path.join(screenshotsDir, filename), fullPage: true });
+      console.log(`Saved: ${filename}`);
     }
-  } catch (e) {
-    console.warn('Could not click View Fix button:', e.message);
-  }
 
-  await page.screenshot({
-    path: path.join(screenshotsDir, '03_opportunities_expanded.png'),
-    fullPage: true,
-  });
-  console.log('Saved: 03_opportunities_expanded.png');
-
-  // 4. Open PostgreSQL History Drawer
-  console.log('Capturing PostgreSQL History Drawer...');
-  try {
-    const historyBtn = await page.evaluateHandle(() => {
-      const btns = Array.from(document.querySelectorAll('button'));
-      return btns.find((b) => b.textContent && b.textContent.includes('Audit History'));
-    });
-    if (historyBtn && historyBtn.asElement()) {
-      await historyBtn.asElement().click();
-      await new Promise((r) => setTimeout(r, 800));
+    for (const [label, filename, fullPage] of [
+      ['View Fix', '03_opportunities_expanded.png', true],
+      ['Audit History', '04_postgresql_history_drawer.png', false],
+    ]) {
+      try {
+        await page.getByRole('button', { name: new RegExp(label) }).first().click({ timeout: 1500 });
+        await page.waitForTimeout(600);
+      } catch (error) {
+        console.warn(`Could not open ${label}: ${error.message}`);
+      }
+      await page.screenshot({ path: path.join(screenshotsDir, filename), fullPage });
+      console.log(`Saved: ${filename}`);
     }
-  } catch (e) {
-    console.warn('Could not click Audit History button:', e.message);
+
+    const reportPath = path.resolve(__dirname, '..', 'artifacts', 'reports', 'raglens_latest.html');
+    await page.goto(pathToFileURL(reportPath).href, { waitUntil: 'domcontentloaded', timeout: 10000 });
+    await page.waitForTimeout(1500);
+    const filename = '05_offline_lighthouse_html_report.png';
+    await page.screenshot({ path: path.join(screenshotsDir, filename), fullPage: true });
+    console.log(`Saved: ${filename}`);
+  } finally {
+    await browser.close();
   }
-
-  await page.screenshot({
-    path: path.join(screenshotsDir, '04_postgresql_history_drawer.png'),
-    fullPage: false,
-  });
-  console.log('Saved: 04_postgresql_history_drawer.png');
-
-  // 5. Offline HTML Report Screenshot
-  console.log('Capturing Offline HTML Report...');
-  const offlineHtmlPath = 'file:///' + path.resolve('..', 'artifacts', 'reports', 'raglens_latest.html').replace(/\\/g, '/');
-  await page.goto(offlineHtmlPath, { waitUntil: 'domcontentloaded', timeout: 10000 });
-  await new Promise((r) => setTimeout(r, 1500));
-
-  await page.screenshot({
-    path: path.join(screenshotsDir, '05_offline_lighthouse_html_report.png'),
-    fullPage: true,
-  });
-  console.log('Saved: 05_offline_lighthouse_html_report.png');
-
-  await browser.close();
-  console.log('All screenshots successfully captured into screenshots/ folder!');
 }
 
-capture().catch((err) => {
-  console.error('Failed to capture screenshots:', err);
-  process.exit(1);
+capture().catch((error) => {
+  console.error('Failed to capture screenshots:', error);
+  process.exitCode = 1;
 });

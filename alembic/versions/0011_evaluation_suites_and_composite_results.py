@@ -7,7 +7,7 @@ from sqlalchemy.dialects.postgresql import JSONB, UUID
 
 from alembic import op
 
-revision = "0011_evaluation_suites_and_composite_results"
+revision = "0011"
 down_revision = "0010_enterprise_auth_and_secrets"
 branch_labels = None
 depends_on = None

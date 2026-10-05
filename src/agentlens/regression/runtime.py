@@ -218,7 +218,7 @@ class RegressionWorker:
                     ],
                 )
                 return True
-            raw_policy = run["policy_body"]
+            raw_policy = run["policy"]
             policy_body = (
                 cast(Mapping[str, object], raw_policy) if isinstance(raw_policy, Mapping) else {}
             )

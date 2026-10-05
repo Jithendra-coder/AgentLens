@@ -1,106 +1,49 @@
 # AgentLens
 
-**Enterprise Observability, Evaluation, Quality Assurance & Governance Platform for Autonomous AI Agents**
+AgentLens is a provider-independent observability and evaluation platform for AI application traces. Its implemented scope covers trace capture and ingestion, PostgreSQL-backed storage, evaluation and replay workflows, regression reports, quality gates, a CLI, and a Next.js dashboard.
 
-AgentLens provides an end-to-end, provider-independent platform for tracing, evaluating, optimizing, and governing AI applications, RAG systems, tool-using agents, and multi-step autonomous workflows.
+## Current project status
 
----
+The [roadmap](docs/ROADMAP.md) records completed milestones and remaining work. M12 is documented as **pass with limitations**; M13 covers deployment foundations. M14–M30 are future milestones. AgentLens is not formally certified for production use: the [security hardening notes](docs/SECURITY_HARDENING.md) explicitly exclude a penetration test, formal certification, and production-readiness claim. Review [limitations](docs/LIMITATIONS.md), the [security model](docs/SECURITY_MODEL.md), and [deployment guidance](docs/DEPLOYMENT.md) before using real data or credentials.
 
-## Key Features & Capabilities
+## What is implemented
 
-### 🔍 1. High-Throughput Distributed Telemetry & Tracing
-- **Canonical Execution Domain Model**: Provider-independent `Trace`, `Span`, `Event`, `Usage`, and `ErrorInfo` representations.
-- **Hybrid Storage Engine**: Dual backend utilizing **PostgreSQL** for relational metadata/RBAC and **DuckDB** for trace analytics.
-- **FastAPI Ingress Protocol**: Asynchronous, rate-limited `/v1/traces` ingestion with request correlation IDs and API key authentication.
-- **Latency & Bottleneck Profiler**: P50/P95/P99 latency analysis and critical-path DAG visualization.
+- A Python SDK and canonical trace, span, and event model.
+- FastAPI ingestion and query APIs with project-scoped keys and bounded request handling.
+- PostgreSQL persistence and optional Redis-backed background work.
+- Deterministic metrics and a provider-independent semantic-judge boundary.
+- Trusted dataset and replay flows, regression reports, and policy-driven quality gates.
+- A dashboard, CLI, container definitions, health probes, and operational configuration.
 
-### 🧪 2. Deterministic Testing, Replays & CI/CD Quality Gates
-- **Trace Replay Sandbox**: Reproduce exact production failure trajectories in a sandboxed mock environment.
-- **Regression Detection**: Automated regression comparisons across latency, cost, and output accuracy.
-- **CI/CD Quality Gates & CLI**: Native `agentlens` CLI to enforce blocking release policies directly in CI/CD deployment pipelines.
+See the [architecture](docs/ARCHITECTURE.md), [testing strategy](docs/TESTING_STRATEGY.md), and [quality gates](docs/QUALITY_GATES.md) for details and limits. Semantic judgments can be fallible; the default core does not provide a live model-provider adapter.
 
-### 🏢 3. Enterprise Security, Multi-Tenancy & Secret Vault
-- **Multi-Tenant RBAC**: Hierarchical roles (*Org Admin*, *Developer*, *Viewer*) with strict project-level foreign key isolation.
-- **AES-256-GCM Secret Vault**: Securely encrypted storage for third-party LLM provider keys with JWT session management.
-- **Automated PII Redaction**: Real-time sanitization of emails, international phone numbers, and bearer credentials.
+## Development
 
-### ⚡ 4. Evaluation Platform & Adaptive Model Routing
-- **Composite Quality Metrics**: Configurable weighted scoring combining exact-match, regex, structural schema, and semantic LLM judges.
-- **Custom Evaluator Plugin SDK**: Extensible Python SDK to dynamically register, test, and execute custom evaluation plugins.
-- **Multi-Model Provider Gateway**: Resilient unified gateway across OpenAI, Anthropic, Gemini, Mistral, and local models with automatic fallback cascades.
-- **Adaptive Quality & Cost Router**: Heuristic model selection routing simple queries to lightweight models and complex tasks to frontier models.
-- **Cost Intelligence & Budgets**: Multi-dimensional token attribution and spend governance with hard departmental budget caps.
-- **Statistical Drift Detection**: Continuous tracking of latency and evaluation distributions using Kolmogorov-Smirnov (KS) and Population Stability Index (PSI) tests.
-- **Automated Root-Cause Analysis (RCA)**: Diagnostic classification of trace failures (prompt injections, context window overflows, timeouts, provider errors, and hallucinations) with normalized failure clustering.
+Requirements: Python 3.11+, Node.js, and npm. Install the backend development tools and run its checks:
 
-### 🛡️ 5. Cryptographic Compliance & Governance
-- **SHA-256 Audit Hash Chaining**: Immutable, tamper-evident audit ledger recording all administrative actions.
-- **Data Retention Policies**: Automated enforcement of GDPR/HIPAA retention windows.
-- **Signed Compliance Bundles**: One-click generation of verifiable compliance export archives.
-
----
-
-## Architecture Overview
-
-```
-Agent Applications (Python SDK / OpenTelemetry)
-       │
-       ▼
-AgentLens Ingress Gateway (FastAPI)
-       │
- ┌─────┴───────────────────────────────────────────────────────┐
- │                                                             │
- ▼                                                             ▼
-PostgreSQL Metadata Store                             DuckDB Analytical Engine
-(Traces, Evals, RBAC, Secrets, Audits)                (Trace Analytics & Profiling)
-       │
- ┌─────┴───────────────────────────────────────────────────────┐
- │                                                             │
- ▼                                                             ▼
-Asynchronous Workers                                  Next.js 14 Web Console
-(Evaluations, Regressions, Replays)                   (14 Dedicated Observability Studios)
-```
-
----
-
-## Quickstart
-
-### 1. Run via Docker Compose
 ```bash
-docker-compose up -d
-```
-
-### 2. Start the Backend API
-```bash
-pip install -e .
-alembic upgrade head
-python -m agentlens.api
-```
-
-### 3. Launch the Web Console
-```bash
-cd web
-npm install
-npm run dev
-```
-Open [http://localhost:3000](http://localhost:3000) to access the AgentLens Web Console.
-
----
-
-## Testing & Quality
-
-Run the complete automated test suite:
-```bash
+python -m pip install -e ".[dev]"
 pytest
 ```
 
-Run static type and lint checks:
+Ruff and strict mypy are configured for contributors, but the current source tree still has existing lint and typing findings; they are not claimed as passing release checks.
+
+For dashboard checks:
+
 ```bash
-mypy src
-ruff check .
+cd web
+npm ci
+npm run typecheck
+npm test
+npm run lint
 ```
 
----
+For the containerized stack, follow [deployment guidance](docs/DEPLOYMENT.md) and configure secrets from `deployment/.env.example`. Do not use sample or placeholder credentials with real data.
+
+## Contributing
+
+Start with [CONTRIBUTING.md](CONTRIBUTING.md) and the [engineering principles](docs/PRINCIPLES.md). Keep claims tied to reproducible evidence and update the relevant contract or documentation when behavior changes.
 
 ## License
+
 Apache 2.0

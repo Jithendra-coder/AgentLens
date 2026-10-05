@@ -35,8 +35,9 @@ mutation-safety checks. M3 adds ASGI integration coverage for canonical
 single/batch ingestion, auth/project isolation, body and batch limits, stable
 errors, request IDs, health, deterministic rate limiting, idempotency/conflicts,
 security leakage checks, OpenAPI, and SDK HTTP exporter delivery. The
-repository also runs pytest, Ruff, mypy, compilation, import/smoke checks,
-and a forbidden-dependency scan. M4 adds real PostgreSQL migration, canonical
+repository runs pytest in CI. Ruff and strict mypy are configured, but the
+current source tree still has existing lint and typing findings; those checks
+are not represented as passing release gates. M4 adds real PostgreSQL migration, canonical
 round-trip, transaction rollback, restart idempotency, concurrent conflict,
 project isolation, filters, cursor pagination, query API, and readiness tests.
 M5 adds real PostgreSQL migration downgrade/re-upgrade, real Redis dispatch,

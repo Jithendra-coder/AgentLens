@@ -190,4 +190,4 @@ if __name__ == "__main__":
             "details": {"error_type": "output_too_large"},
         }
         output = json.dumps(response)
-    Path("/tmp/result.json").write_text(output, encoding="utf-8")
+    Path("/result.json").write_text(output, encoding="utf-8")

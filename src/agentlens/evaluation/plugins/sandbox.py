@@ -92,8 +92,10 @@ def execute_custom_evaluator(
             request_file = Path(temporary_dir) / "request.json"
             result_file = Path(temporary_dir) / "result.json"
             request_file.write_text(payload, encoding="utf-8")
+            result_file.touch()
             os.chmod(temporary_dir, 0o755)
             os.chmod(request_file, 0o644)
+            os.chmod(result_file, 0o666)
 
             created = subprocess.run(
                 [
@@ -114,6 +116,8 @@ def execute_custom_evaluator(
                     "/tmp:rw,noexec,nosuid,size=16m,mode=1777",
                     "--mount",
                     f"type=bind,source={request_file},target=/request.json,readonly",
+                    "--mount",
+                    f"type=bind,source={result_file},target=/result.json",
                     _IMAGE,
                     "python",
                     "-I",
@@ -151,13 +155,7 @@ def execute_custom_evaluator(
             if waited.returncode != 0 or waited.stdout.strip() != "0":
                 return _failure("sandbox_execution_failed", "The isolated evaluator failed.")
 
-            copied = subprocess.run(
-                ["docker", "cp", f"{container_id}:/tmp/result.json", str(result_file)],
-                capture_output=True,
-                timeout=10,
-                check=False,
-            )
-            if copied.returncode != 0 or not result_file.is_file():
+            if not result_file.is_file() or result_file.stat().st_size == 0:
                 return _failure(
                     "sandbox_result_missing", "The isolated evaluator returned no result."
                 )

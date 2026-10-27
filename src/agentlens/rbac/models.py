@@ -23,6 +23,7 @@ class Permission(StrEnum):
     EVALUATIONS_RUN = "evaluations:run"
     EVALUATIONS_READ = "evaluations:read"
     DATASETS_MANAGE = "datasets:manage"
+    CUSTOM_EVALUATORS_MANAGE = "custom_evaluators:manage"
     REPLAYS_MANAGE = "replays:manage"
     REGRESSIONS_MANAGE = "regressions:manage"
     QUALITY_GATES_MANAGE = "quality_gates:manage"
@@ -42,6 +43,7 @@ ROLE_PERMISSIONS: dict[str, frozenset[str]] = {
             Permission.EVALUATIONS_RUN.value,
             Permission.EVALUATIONS_READ.value,
             Permission.DATASETS_MANAGE.value,
+            Permission.CUSTOM_EVALUATORS_MANAGE.value,
             Permission.REPLAYS_MANAGE.value,
             Permission.REGRESSIONS_MANAGE.value,
             Permission.QUALITY_GATES_MANAGE.value,
@@ -57,6 +59,7 @@ ROLE_PERMISSIONS: dict[str, frozenset[str]] = {
             Permission.EVALUATIONS_RUN.value,
             Permission.EVALUATIONS_READ.value,
             Permission.DATASETS_MANAGE.value,
+            Permission.CUSTOM_EVALUATORS_MANAGE.value,
             Permission.REPLAYS_MANAGE.value,
             Permission.REGRESSIONS_MANAGE.value,
             Permission.QUALITY_GATES_MANAGE.value,

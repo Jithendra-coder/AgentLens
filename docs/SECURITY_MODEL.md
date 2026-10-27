@@ -91,3 +91,11 @@ and lease claim tokens prevent stale workers from overwriting recovered
 executions. Target execution is at-least-once after crashes, so M9 does not
 claim exactly-once side effects. Retention/deletion enforcement for datasets,
 outputs, and replay traces remains deferred.
+
+## Custom evaluator controls
+
+Custom evaluator source is untrusted. It runs only in a short-lived Docker
+container with networking disabled, a read-only root filesystem, dropped Linux
+capabilities, and memory, CPU, process-count, and execution-time limits. When
+Docker is unavailable, evaluator execution fails closed. Containers reduce
+risk but share the host kernel; deploy with a trusted, patched Docker daemon.

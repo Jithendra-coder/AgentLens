@@ -10,14 +10,17 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
 from agentlens.api.auth import AuthContext
-from agentlens.api.dependencies import require_auth
+from agentlens.api.dependencies import require_permission
 from agentlens.api.errors import GatewayError
 from agentlens.evaluation.plugins.models import CustomEvaluatorPlugin, EvaluatorContext
 from agentlens.evaluation.plugins.repository import CustomEvaluatorRepository
 from agentlens.evaluation.plugins.sandbox import execute_custom_evaluator
+from agentlens.rbac.models import Permission
 
 router = APIRouter()
-AUTH_DEP = Depends(require_auth)
+READ_DEP = Depends(require_permission(Permission.EVALUATIONS_READ.value))
+RUN_DEP = Depends(require_permission(Permission.EVALUATIONS_RUN.value))
+MANAGE_DEP = Depends(require_permission(Permission.CUSTOM_EVALUATORS_MANAGE.value))
 
 
 class RegisterPluginRequest(BaseModel):
@@ -25,7 +28,7 @@ class RegisterPluginRequest(BaseModel):
     version: str = Field(default="1.0.0", max_length=32)
     evaluator_type: str = Field(default="deterministic", max_length=32)
     description: str | None = Field(default=None, max_length=1024)
-    code_body: str = Field(min_length=1)
+    code_body: str = Field(min_length=1, max_length=100_000)
     schema_parameters: dict[str, Any] = Field(default_factory=dict)
 
 
@@ -43,6 +46,15 @@ def _custom_repo(request: Request) -> CustomEvaluatorRepository:
             status_code=503,
         )
     return cast(CustomEvaluatorRepository, repo)
+
+
+def _authorize_project(context: AuthContext, project_id: str) -> None:
+    if context.project_id != project_id:
+        raise GatewayError(
+            code="project_forbidden",
+            message="Project is not authorized for this key.",
+            status_code=403,
+        )
 
 
 def _plugin_json(plugin: CustomEvaluatorPlugin) -> dict[str, Any]:
@@ -65,8 +77,9 @@ async def register_custom_evaluator(
     project_id: str,
     body: RegisterPluginRequest,
     request: Request,
-    context: AuthContext = AUTH_DEP,
+    context: AuthContext = MANAGE_DEP,
 ) -> JSONResponse:
+    _authorize_project(context, project_id)
     repo = _custom_repo(request)
     plugin = CustomEvaluatorPlugin(
         plugin_id=uuid4(),
@@ -86,8 +99,9 @@ async def register_custom_evaluator(
 async def list_custom_evaluators(
     project_id: str,
     request: Request,
-    context: AuthContext = AUTH_DEP,
+    context: AuthContext = READ_DEP,
 ) -> JSONResponse:
+    _authorize_project(context, project_id)
     repo = _custom_repo(request)
     plugins = repo.list_plugins(project_id)
     return JSONResponse(
@@ -101,8 +115,9 @@ async def get_custom_evaluator(
     project_id: str,
     plugin_id: UUID,
     request: Request,
-    context: AuthContext = AUTH_DEP,
+    context: AuthContext = READ_DEP,
 ) -> JSONResponse:
+    _authorize_project(context, project_id)
     repo = _custom_repo(request)
     plugin = repo.get_plugin(plugin_id)
     if plugin is None or plugin.project_id != project_id:
@@ -115,8 +130,9 @@ async def delete_custom_evaluator(
     project_id: str,
     plugin_id: UUID,
     request: Request,
-    context: AuthContext = AUTH_DEP,
+    context: AuthContext = MANAGE_DEP,
 ) -> JSONResponse:
+    _authorize_project(context, project_id)
     repo = _custom_repo(request)
     plugin = repo.get_plugin(plugin_id)
     if plugin is None or plugin.project_id != project_id:
@@ -131,8 +147,9 @@ async def test_custom_evaluator(
     plugin_id: UUID,
     body: TestPluginRequest,
     request: Request,
-    context: AuthContext = AUTH_DEP,
+    context: AuthContext = RUN_DEP,
 ) -> JSONResponse:
+    _authorize_project(context, project_id)
     repo = _custom_repo(request)
     plugin = repo.get_plugin(plugin_id)
     if plugin is None or plugin.project_id != project_id:

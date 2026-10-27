@@ -3,10 +3,13 @@
 from __future__ import annotations
 
 import asyncio
+import shutil
+import subprocess
 from datetime import UTC, datetime, timedelta
 from uuid import uuid4
 
 import httpx
+import pytest
 
 from agentlens.api import InMemoryApiKeyAuthenticator, create_app
 from agentlens.api.config import GatewayConfig
@@ -27,6 +30,12 @@ def make_test_app():
         key_id="master-key-1",
         project_id="proj-plugins",
         role=Role.ORG_ADMIN.value,
+    )
+    authenticator.register(
+        api_key="service-evaluator-key",
+        key_id="service-evaluator-1",
+        project_id="proj-plugins",
+        role=Role.SERVICE_EVALUATOR.value,
     )
     rbac_repo = InMemoryRbacRepository()
     sink = InMemoryTraceSink()
@@ -61,6 +70,18 @@ async def send_request(
         return await client.request(method, path, headers=request_headers, json=json_body)
 
 
+def _docker_available() -> bool:
+    if not shutil.which("docker"):
+        return False
+    try:
+        return subprocess.run(["docker", "info"], capture_output=True, timeout=5).returncode == 0
+    except (OSError, subprocess.TimeoutExpired):
+        return False
+
+
+@pytest.mark.skipif(
+    not _docker_available(), reason="Docker is required for isolated evaluator tests"
+)
 def test_custom_evaluator_lifecycle_and_execution() -> None:
     app, sink = make_test_app()
     t0 = datetime(2026, 8, 31, 12, 0, 0, tzinfo=UTC)
@@ -185,5 +206,33 @@ def evaluate(context, parameters):
         assert suite_out["aggregate_score"] >= 0.8
         assert suite_out["passed"] is True
         assert len(suite_out["metric_scores"]) == 2
+
+    asyncio.run(run())
+
+
+def test_custom_evaluator_routes_enforce_project_scope_and_manage_permission() -> None:
+    app, _ = make_test_app()
+
+    async def run() -> None:
+        cross_project = await send_request(
+            app,
+            "GET",
+            "/v1/projects/proj-other/custom-evaluators",
+        )
+        assert cross_project.status_code == 403
+        assert cross_project.json()["error"]["code"] == "project_forbidden"
+
+        missing_permission = await send_request(
+            app,
+            "POST",
+            "/v1/projects/proj-plugins/custom-evaluators",
+            api_key="service-evaluator-key",
+            json_body={
+                "name": "blocked",
+                "code_body": "def evaluate(context, parameters): return 1",
+            },
+        )
+        assert missing_permission.status_code == 403
+        assert missing_permission.json()["error"]["code"] == "forbidden"
 
     asyncio.run(run())
